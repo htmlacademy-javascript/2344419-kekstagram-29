@@ -59,10 +59,10 @@ const photoComments = (min, max) => {
   }));
 };
 
-const userPhoto = (COUNTOBJ) => ({
-  id: COUNTOBJ,
-  url: `photos/${COUNTOBJ}.jpg`,
-  description: `фотография с ${COUNTOBJ} котиком`,
+const userPhoto = (count) => ({
+  id: count,
+  url: `photos/${count}.jpg`,
+  description: `фотография с ${count} котиком`,
   likes: getRandom(MINLIKES, MAXLIKES),
   comments: photoComments(0, MAXCOMMENTS),
 });
