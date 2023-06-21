@@ -17,6 +17,7 @@ const NAMES = [
   "Соня",
   "Клава",
   "Максим",
+  "Саша",
 ];
 
 const MESSAGES = [
