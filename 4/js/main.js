@@ -1,4 +1,11 @@
-const names = [
+const COUNTOBJ = 25;
+const MINLIKES = 15;
+const MAXLIKES = 200;
+const MAXCOMMENTS = 30;
+const MAXIDCOMM = 1000;
+const MAXAVATAR = 6;
+
+const NAMES = [
   "Артем",
   "Иван",
   "Антон",
@@ -12,7 +19,7 @@ const names = [
   "Максим",
 ];
 
-const messages = [
+const MESSAGES = [
   "Всё отлично!",
   "В целом всё неплохо. Но не всё.",
   "Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.",
@@ -40,29 +47,27 @@ const createRandomIdFromRangeGenerator = (min, max) => {
   };
 };
 
-const generateCommentId = createRandomIdFromRangeGenerator(0, 1000);
+const generateCommentId = createRandomIdFromRangeGenerator(0, MAXIDCOMM);
 
 const photoComments = (min, max) => {
   const count = getRandom(min, max);
   return Array.from({ length: count }).map(() => ({
     id: generateCommentId(),
-    avatar: `img/avatar-${getRandom(1, 6)}.svg`,
-    message: messages[getRandom(0, 5)],
-    name: names[getRandom(0, 9)],
+    avatar: `img/avatar-${getRandom(1, MAXAVATAR)}.svg`,
+    message: MESSAGES[getRandom(0, MESSAGES.length)],
+    name: NAMES[getRandom(0, NAMES.length)],
   }));
 };
 
-const userPhoto = (id) => ({
-  id: id,
-  url: `photos/${id}.jpg`,
-  description: `фотография с ${id} котиком`,
-  likes: getRandom(15, 200),
-  comments: photoComments(0, 30),
+const userPhoto = (COUNTOBJ) => ({
+  id: COUNTOBJ,
+  url: `photos/${COUNTOBJ}.jpg`,
+  description: `фотография с ${COUNTOBJ} котиком`,
+  likes: getRandom(MINLIKES, MAXLIKES),
+  comments: photoComments(0, MAXCOMMENTS),
 });
 
-const result = () => {
-  const photoCount = 25;
-  return Array.from({ length: photoCount }).map((_, i) => userPhoto(i + 1));
-};
+const result = () =>
+  Array.from({ length: COUNTOBJ }).map((_, i) => userPhoto(i + 1));
 
 result();
