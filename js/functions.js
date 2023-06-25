@@ -10,3 +10,6 @@ function isPalindrome(string) {
   }
   return normalString === reverseString;
 }
+
+isValid('Test', 20);
+isPalindrome('тест');
