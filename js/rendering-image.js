@@ -54,7 +54,7 @@ const renderingImg = (matchedPhoto, templateClone)=>{//функция отрис
     }
 
     counter = 5;
-    const onClickComments = (evt)=>{//слушатель для создания 5 или меньше комментариев
+    const onClickComments = ()=>{//слушатель для создания 5 или меньше комментариев
       createComments(counter,Math.min(comments.length,counter + 5),comments,containerComments2);
       counter += 5;
       counterComment.innerHTML = `${counter} из ${comments.length} комментариев`;
