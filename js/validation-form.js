@@ -36,29 +36,29 @@ inputTextComments.addEventListener('focus',(evt)=>{
 
 const imgForm = document.querySelector('.img-upload__form');//форма загрузки и редактирования изображения
 
-const pristine = new Pristine(imgForm);
+// const pristine = new Pristine(imgForm);
 imgForm.addEventListener('submit',(evt)=>{
   evt.preventDefault();
-  const isValid = pristine.validate();
-  console.log(isValid);
+  // const isValid = pristine.validate();
+  // console.log(isValid);
 
 
   const textHashtage = inputTextHashtags.value;
-  console.log(textHashtage);
+  // console.log(textHashtage);
 
   const hashteges = textHashtage.split(' ');
-  console.log(hashteges);
+  // console.log(hashteges);
 
   const hashtagReg = /^#[a-zа-яё0-9]{1,19}$/i;
 
   const uniqueHashteges = Array.from(new Set(hashteges.map((e) => e.toLowerCase())));
-  console.log(uniqueHashteges);
+  // console.log(uniqueHashteges);
 
 
   if (hashteges.every((elem)=> hashtagReg.test(elem)) && hashteges.length <= 5 && hashteges.length === uniqueHashteges.length){
-    console.log('можно отправлять');
+    // console.log('можно отправлять');
   }else{
-    console.log('форма не валидна');
+    // console.log('форма не валидна');
   }
 
 
