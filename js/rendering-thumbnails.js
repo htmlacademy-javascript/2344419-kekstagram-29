@@ -16,7 +16,7 @@ for (const matchedPhoto of matchedPhotos) {
   const {url, description, likes, comments, id} = matchedPhoto;
 
   const templateClone = templateElement.cloneNode(true);
-  templateClone.dataset.id = id;
+  templateClone.id = id;
 
   renderingImg(matchedPhoto,templateClone);
 

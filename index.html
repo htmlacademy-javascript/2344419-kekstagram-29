@@ -53,6 +53,10 @@
               Загрузка фотографии
             </h2>
             <form
+            method="post"
+            enctype="multipart/form-data"
+            action="https://29.javascript.pages.academy/kekstagram"
+
               class="img-upload__form"
               id="upload-select-image"
               autocomplete="off"
@@ -234,18 +238,26 @@
                   <!-- Добавление хэш-тегов и комментария к изображению -->
                   <fieldset class="img-upload__text text">
                     <div class="img-upload__field-wrapper">
+                      <label class="setup-form__hashtage">
                       <input
+                        type="text"
                         class="text__hashtags"
                         name="hashtags"
                         placeholder="#ХэшТег"
-                      />
+
+                      /></label>
                     </div>
                     <div class="img-upload__field-wrapper">
+                      <label class="setup-form__description">
                       <textarea
+                        type="text"
+                        data-pristine-maxlength="140"
                         class="text__description"
                         name="description"
                         placeholder="Ваш комментарий..."
+                        data-pristine-maxlength-message="Максимальная длина 140 символов"
                       ></textarea>
+                    </label>
                     </div>
                   </fieldset>
 
@@ -447,6 +459,7 @@
         </div>
       </section>
     </template>
+    <script src="/vendor/pristine/pristine.min.js"></script>
     <script src="./js/main.js" type="module"></script>
   </body>
 </html>
