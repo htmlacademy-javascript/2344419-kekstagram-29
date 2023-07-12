@@ -37,9 +37,9 @@ const photoComments = (min, max) => {
   const count = getRandom(min, max);
   return Array.from({ length: count }).map(() => ({
     id: generateCommentId(),
-    avatar: `img/avatar-${getRandom(1, MAX_AVATAR)}.svg`,
-    message: MESSAGES[getRandom(0, MESSAGES.length)],
-    name: NAMES[getRandom(0, NAMES.length)],
+    avatar: `img/avatar-${getRandom(1, MAX_AVATAR - 1)}.svg`,
+    message: MESSAGES[getRandom(0, MESSAGES.length - 1)],
+    name: NAMES[getRandom(0, NAMES.length - 1)],
   }));
 };
 const fff = [];
