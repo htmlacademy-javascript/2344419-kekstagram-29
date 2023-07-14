@@ -1,65 +1,91 @@
+import {scaleImge,START_SCALE} from './scrol-filter-img.js';
 
-const imgUploadInput = document.querySelector('.img-upload__input');
+const maxCountHashtag = 5;
+const hashtagRe = /^#[a-zа-яё0-9]{1,19}$/i;
+const inputTextHashtags = document.querySelector('.text__hashtags');//поле ввода хештега
+const inputTextComments = document.querySelector('.text__description');//поле ввода коментария
+const imgUploadInput = document.querySelector('.img-upload__input');//поле выбора файла
 const buttonCancel = document.querySelector('.img-upload__cancel');//кнопка Х
 const containerEditingForm = document.querySelector('.img-upload__overlay');//контейнер редактирования фотографии
+const imgForm = document.querySelector('.img-upload__form');//форма загрузки и редактирования изображения
 
-imgUploadInput.addEventListener('change',()=>{
-  containerEditingForm.classList.remove('hidden');
-  document.querySelector('body').classList.add('modal-open');
-  buttonCancel.classList.remove('hidden');
+
+const pristine = new Pristine(imgForm,{
+  classTo:'img-upload__field-wrapper',
+  errorTextParent:'img-upload__field-wrapper'
 });
 
-const onEventForm = () =>{
-  buttonCancel.classList.add('hidden');
-  document.querySelector('body').classList.remove('.modal-open');
-  containerEditingForm.classList.add('hidden');
-};
+imgForm.addEventListener('submit',(evt)=>{
+  evt.preventDefault();
+  pristine.validate();
 
-buttonCancel.addEventListener('click',onEventForm);
+  const textHashtage = inputTextHashtags.value;
+  const hashteges = textHashtage.trim().split(' ').filter((elem) => Boolean(elem.length));//убираем пробелы по бокам, делим по пробелам, фильтруем елем-если пустые(false)-убираем
+  const uniqueHashteges = Array.from(new Set(hashteges.map((e) => e.toLowerCase())));//массив уникальных значений без повторений
+
+
+  pristine.addValidator(
+    inputTextHashtags,//поле ввода
+    ()=> hashteges.every((elem)=> hashtagRe.test(elem)),//функция проверки патерна
+    'Неправильный хэштег',//сообщение ошибки
+    2,//очередность
+    true//продолжать ли при невалидности
+  );
+  pristine.addValidator(
+    inputTextHashtags,//поле ввода
+    ()=> hashteges.length <= 5,//функция проверки на кол-во хэштегов
+    `Максимум ${maxCountHashtag} хэштегов`,//сообщение ошибки
+    3,//очередность
+    true//продолжать ли при невалидности
+  );
+  pristine.addValidator(
+    inputTextHashtags,//поле ввода
+    ()=> hashteges.length === uniqueHashteges.length,//функция проверки на никальность хэштегов
+    'Хэштеги должны быть уникальными',//сообщение ошибки
+    1,//очередность
+    true//продолжать ли при невалидности
+  );
+});
+
+
+const onEventForm = () =>{//функция закрытия формы
+  buttonCancel.classList.add('hidden');//скрываем кнопку Х
+  document.querySelector('body').classList.remove('.modal-open');//возвращаем скрол
+  containerEditingForm.classList.add('hidden');//скрывает контейнер редактирования
+  buttonCancel.removeEventListener('click',onEventForm);//слушатель удаления по Х
+  document.removeEventListener('keydown',keyDown);//по кнопке ESC
+  imgUploadInput.reset();
+  inputTextHashtags.reset();
+  inputTextComments.reset();
+  pristine.reset();
+  scaleImge(START_SCALE);
+};
 const keyDown = (evt) =>{
   if(evt.key === 'Escape'){
     onEventForm(evt);
   }
 };
-document.addEventListener('keydown',keyDown);
 
-
-const inputTextHashtags = document.querySelector('.text__hashtags');//поле ввода хештега
-const inputTextComments = document.querySelector('.text__description');//поле ввода коментария
-inputTextHashtags.addEventListener('focus',(evt)=>{
-  evt.stopPropagation();
-});
-inputTextComments.addEventListener('focus',(evt)=>{
-  evt.stopPropagation();
-});
-
-
-const imgForm = document.querySelector('.img-upload__form');//форма загрузки и редактирования изображения
-
-// const pristine = new Pristine(imgForm);
-imgForm.addEventListener('submit',(evt)=>{
-  evt.preventDefault();
-  // const isValid = pristine.validate();
-  // console.log(isValid);
-
-
-  const textHashtage = inputTextHashtags.value;
-  // console.log(textHashtage);
-
-  const hashteges = textHashtage.split(' ');
-  // console.log(hashteges);
-
-  const hashtagReg = /^#[a-zа-яё0-9]{1,19}$/i;
-
-  const uniqueHashteges = Array.from(new Set(hashteges.map((e) => e.toLowerCase())));
-  // console.log(uniqueHashteges);
-
-
-  if (hashteges.every((elem)=> hashtagReg.test(elem)) && hashteges.length <= 5 && hashteges.length === uniqueHashteges.length){
-    // console.log('можно отправлять');
-  }else{
-    // console.log('форма не валидна');
-  }
-
+imgUploadInput.addEventListener('change',()=>{//слушатель события открытие окна загрузки
+  containerEditingForm.classList.remove('hidden');//показать контейнер редактирования
+  document.querySelector('body').classList.add('modal-open');// чтобы не работал скрол большого окна
+  buttonCancel.classList.remove('hidden');//показываем кнопку Х
+  buttonCancel.addEventListener('click',onEventForm);//слушатель удаления по Х
+  document.addEventListener('keydown',keyDown);//по кнопке ESC
 
 });
+
+const removalKeydown = () => {
+  document.removeEventListener('keydown',keyDown);
+};
+const returnKeydown = ()=>{
+  document.addEventListener('keydown',keyDown);
+};
+
+inputTextHashtags.addEventListener('focus',removalKeydown);//запрет на кнопку ескейпт в фокусе
+inputTextHashtags.addEventListener('blur',returnKeydown);//возврат
+
+inputTextComments.addEventListener('focus',removalKeydown);//запрет на кнопку ескейпт в фокусе
+inputTextComments.addEventListener('blur',returnKeydown);//возврат
+
+

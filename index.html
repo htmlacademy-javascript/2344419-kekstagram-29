@@ -86,6 +86,7 @@
                       <button
                         type="button"
                         class="scale__control scale__control--smaller"
+
                       >
                         Уменьшить
                       </button>
@@ -250,12 +251,11 @@
                     <div class="img-upload__field-wrapper">
                       <label class="setup-form__description">
                       <textarea
-                        type="text"
-                        data-pristine-maxlength="140"
                         class="text__description"
                         name="description"
                         placeholder="Ваш комментарий..."
-                        data-pristine-maxlength-message="Максимальная длина 140 символов"
+                        data-pristine-maxlength="140"
+                        data-pristine-maxlength-message="Комментарий не может быть длинее 140 символов"
                       ></textarea>
                     </label>
                     </div>
@@ -459,6 +459,7 @@
         </div>
       </section>
     </template>
+    <script src="/vendor/nouislider/nouislider.js"></script>
     <script src="/vendor/pristine/pristine.min.js"></script>
     <script src="./js/main.js" type="module"></script>
   </body>
