@@ -60,11 +60,14 @@ const onEventForm = () =>{//функция закрытия формы
   pristine.reset();
   scaleImge(START_SCALE);
 };
-const keyDown = (evt) =>{
+
+// TODO:
+// написано ввиде функции чтобы залить, потом исправить
+function keyDown (evt) {
   if(evt.key === 'Escape'){
     onEventForm(evt);
   }
-};
+}
 
 imgUploadInput.addEventListener('change',()=>{//слушатель события открытие окна загрузки
   containerEditingForm.classList.remove('hidden');//показать контейнер редактирования
