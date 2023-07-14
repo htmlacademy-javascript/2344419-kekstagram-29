@@ -42,67 +42,67 @@ export {scaleImge,START_SCALE};/////не работает
 
 const originalButton = document.querySelector('.effects__preview--none');
 originalButton.addEventListener('click',()=>{
-  const originalFiltr = { //оригинал
-    filter: 0,
-    min:0,
-    max:0,
-    step:0
-  };
+  // const originalFiltr = { //оригинал
+  //   filter: 0,
+  //   min:0,
+  //   max:0,
+  //   step:0
+  // };
   // console.log(originalFiltr);
 });
 
 const grayscaleButton = document.querySelector('.effects__preview--chrome');
 grayscaleButton.addEventListener('click',()=>{
-  const grayscaleFiltr = { //хром
-    filter: 'grayscale',
-    min:0,
-    max:1,
-    step:0.1
-  };
+  // const grayscaleFiltr = { //хром
+  //   filter: 'grayscale',
+  //   min:0,
+  //   max:1,
+  //   step:0.1
+  // };
   // console.log(grayscaleFiltr);
 });
 
 const sepiaButton = document.querySelector('.effects__preview--sepia');
 sepiaButton.addEventListener('click',()=>{
-  const sepiaFiltr = { //сепия
-    filter: 'sepia',
-    min:0,
-    max:1,
-    step:0.1
-  };
+  // const sepiaFiltr = { //сепия
+  //   filter: 'sepia',
+  //   min:0,
+  //   max:1,
+  //   step:0.1
+  // };
   // console.log(sepiaFiltr);
 });
 
 const invertButton = document.querySelector('.effects__preview--marvin');
 invertButton.addEventListener('click',()=>{
-  const invertFiltr = { //марвин//%
-    filter: 'invert',
-    min:0,
-    max:100,
-    step:1
-  };
+  // const invertFiltr = { //марвин//%
+  //   filter: 'invert',
+  //   min:0,
+  //   max:100,
+  //   step:1
+  // };
   // console.log(invertFiltr);
 });
 
 const blurButton = document.querySelector('.effects__preview--phobos');
 blurButton.addEventListener('click',()=>{
-  const blurFiltr = { //фобос//px
-    filter: 'blur',
-    min:0,
-    max:3,
-    step:0.1
-  };
+  // const blurFiltr = { //фобос//px
+  //   filter: 'blur',
+  //   min:0,
+  //   max:3,
+  //   step:0.1
+  // };
   // console.log(blurFiltr);
 });
 
 const brightnessButton = document.querySelector('.effects__preview--heat');
 brightnessButton.addEventListener('click',()=>{
-  const brightnessFiltr = { //зной
-    filter: 'brightness',
-    min:1,
-    max:3,
-    step:0.1
-  };
+  // const brightnessFiltr = { //зной
+  //   filter: 'brightness',
+  //   min:1,
+  //   max:3,
+  //   step:0.1
+  // };
   // console.log(brightnessFiltr);
 });
 
@@ -111,5 +111,5 @@ brightnessButton.addEventListener('click',()=>{
 //только один эффек
 //при выборе оригинал контейнер с эффектами скрываются
 //при переключении уровни сбрасываются до начатьного 100%
-const effectLevelValue = document.querySelector('.effect-level__value'); //уровень применения эффекта
-const containerImgEffect = document.querySelector('.img-upload__effect-level'); //контейнер с эффектами
+// const effectLevelValue = document.querySelector('.effect-level__value'); //уровень применения эффекта
+// const containerImgEffect = document.querySelector('.img-upload__effect-level'); //контейнер с эффектами
