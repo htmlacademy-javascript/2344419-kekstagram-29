@@ -5,8 +5,8 @@ const START_SCALE = 100;
 const buttonScaleMin = document.querySelector('.scale__control--smaller');//кнопка +
 const buttonScaleMax = document.querySelector('.scale__control--bigger');//кнопка -
 const scaleValue = document.querySelector('.scale__control--value');//поле вывода значения масшаба
-const imgPreview = document.querySelector('.img-upload__preview');//изображение в форме для редактирования
-
+const imgPreview = document.querySelector('.img-upload__preview img');//изображение в форме для редактирования
+const sliderElement = document.querySelector('.effect-level__slider');
 
 //по умолчанию 100% не сделано
 
@@ -42,7 +42,7 @@ export {scaleImge,START_SCALE};/////не работает
 
 const originalButton = document.querySelector('.effects__preview--none');
 originalButton.addEventListener('click',()=>{
-  // const originalFiltr = { //оригинал
+  //const originalFiltr = { //оригинал
   //   filter: 0,
   //   min:0,
   //   max:0,
@@ -52,13 +52,16 @@ originalButton.addEventListener('click',()=>{
 });
 
 const grayscaleButton = document.querySelector('.effects__preview--chrome');
-grayscaleButton.addEventListener('click',()=>{
-  // const grayscaleFiltr = { //хром
-  //   filter: 'grayscale',
-  //   min:0,
-  //   max:1,
-  //   step:0.1
-  // };
+grayscaleButton.addEventListener('click',()=>{//хром
+  imgPreview.style.filter = 'grayscale';
+
+  noUiSlider.create(sliderElement, {
+    range: {
+      min: 0,
+      max: 1,
+      step:0.1
+    },
+  });
   // console.log(grayscaleFiltr);
 });
 
