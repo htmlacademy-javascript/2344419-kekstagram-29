@@ -1,6 +1,6 @@
 import {scaleImge,START_SCALE} from './scrol-filter-img.js';
 
-const maxCountHashtag = 5;
+const MAX_COUNT_HASHTAGE = 5;
 const hashtagRe = /^#[a-zа-яё0-9]{1,19}$/i;
 const inputTextHashtags = document.querySelector('.text__hashtags');//поле ввода хештега
 const inputTextComments = document.querySelector('.text__description');//поле ввода коментария
@@ -15,14 +15,13 @@ const pristine = new Pristine(imgForm,{
   errorTextParent:'img-upload__field-wrapper'
 });
 
+
 imgForm.addEventListener('submit',(evt)=>{
   evt.preventDefault();
-  pristine.validate();
 
   const textHashtage = inputTextHashtags.value;
   const hashteges = textHashtage.trim().split(' ').filter((elem) => Boolean(elem.length));//убираем пробелы по бокам, делим по пробелам, фильтруем елем-если пустые(false)-убираем
   const uniqueHashteges = Array.from(new Set(hashteges.map((e) => e.toLowerCase())));//массив уникальных значений без повторений
-
 
   pristine.addValidator(
     inputTextHashtags,//поле ввода
@@ -34,7 +33,7 @@ imgForm.addEventListener('submit',(evt)=>{
   pristine.addValidator(
     inputTextHashtags,//поле ввода
     ()=> hashteges.length <= 5,//функция проверки на кол-во хэштегов
-    `Максимум ${maxCountHashtag} хэштегов`,//сообщение ошибки
+    `Максимум ${MAX_COUNT_HASHTAGE} хэштегов`,//сообщение ошибки
     3,//очередность
     true//продолжать ли при невалидности
   );
@@ -45,6 +44,8 @@ imgForm.addEventListener('submit',(evt)=>{
     1,//очередность
     true//продолжать ли при невалидности
   );
+
+  pristine.validate();
 });
 
 
@@ -52,8 +53,6 @@ const onEventForm = () =>{//функция закрытия формы
   buttonCancel.classList.add('hidden');//скрываем кнопку Х
   document.querySelector('body').classList.remove('.modal-open');//возвращаем скрол
   containerEditingForm.classList.add('hidden');//скрывает контейнер редактирования
-  buttonCancel.removeEventListener('click',onEventForm);//слушатель удаления по Х
-  document.removeEventListener('keydown',keyDown);//по кнопке ESC
   imgUploadInput.reset();
   inputTextHashtags.reset();
   inputTextComments.reset();
@@ -61,13 +60,11 @@ const onEventForm = () =>{//функция закрытия формы
   scaleImge(START_SCALE);
 };
 
-// TODO:
-// написано ввиде функции чтобы залить, потом исправить
-function keyDown (evt) {
+const keyDown = (evt) => {
   if(evt.key === 'Escape'){
     onEventForm(evt);
   }
-}
+};
 
 imgUploadInput.addEventListener('change',()=>{//слушатель события открытие окна загрузки
   containerEditingForm.classList.remove('hidden');//показать контейнер редактирования
