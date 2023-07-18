@@ -1,14 +1,15 @@
-import {scaleImge,START_SCALE} from './scrol-filter-img.js';
+import './scrol-filter-img.js';
 
 const MAX_COUNT_HASHTAGE = 5;
 const hashtagRe = /^#[a-zа-яё0-9]{1,19}$/i;
 const inputTextHashtags = document.querySelector('.text__hashtags');//поле ввода хештега
 const inputTextComments = document.querySelector('.text__description');//поле ввода коментария
 const imgUploadInput = document.querySelector('.img-upload__input');//поле выбора файла
+const imgPreview = document.querySelector('.img-upload__preview img');//изображение в форме для редактирования
 const buttonCancel = document.querySelector('.img-upload__cancel');//кнопка Х
 const containerEditingForm = document.querySelector('.img-upload__overlay');//контейнер редактирования фотографии
 const imgForm = document.querySelector('.img-upload__form');//форма загрузки и редактирования изображения
-
+const containerSlider = document.querySelector('.img-upload__effect-level');//контейнер слайдера
 
 const pristine = new Pristine(imgForm,{
   classTo:'img-upload__field-wrapper',
@@ -53,11 +54,14 @@ const onEventForm = () =>{//функция закрытия формы
   buttonCancel.classList.add('hidden');//скрываем кнопку Х
   document.querySelector('body').classList.remove('.modal-open');//возвращаем скрол
   containerEditingForm.classList.add('hidden');//скрывает контейнер редактирования
+  imgPreview.style.transform = `scale(${1})`;
+  imgPreview.style.filter = null;
+  containerSlider.classList.add('hidden');
   imgUploadInput.reset();
   inputTextHashtags.reset();
   inputTextComments.reset();
   pristine.reset();
-  scaleImge(START_SCALE);
+
 };
 
 const keyDown = (evt) => {

@@ -1,14 +1,51 @@
 const STEP_SCALE = 25;
 const MIN_SCALE = 25;
 const MAX_SCALE = 100;
-const START_SCALE = 100;
+
+const EFFECTGRAYSCALE = {
+  filter:'grayscale',
+  step:0.1,
+  min:0,
+  max:1,
+  ed:'',
+};
+const EFFECTSEPIA = {
+  filter:'sepia',
+  step:0.1,
+  min:0,
+  max:1,
+  ed:'',
+};
+const EFFECTINVERT = {
+  filter:'invert',
+  step:1,
+  min:0,
+  max:100,
+  ed:'%',
+};
+const EFFECTBLUR = {
+  filter:'blur',
+  step:0.1,
+  min:0,
+  max:3,
+  ed:'px',
+};
+const EFFECTBRIGHTNESS = {
+  filter:'brightness',
+  step:0.1,
+  min:1,
+  max:3,
+  ed:'',
+};
+
 const buttonScaleMin = document.querySelector('.scale__control--smaller');//кнопка +
 const buttonScaleMax = document.querySelector('.scale__control--bigger');//кнопка -
 const scaleValue = document.querySelector('.scale__control--value');//поле вывода значения масшаба
 const imgPreview = document.querySelector('.img-upload__preview img');//изображение в форме для редактирования
-const sliderElement = document.querySelector('.effect-level__slider');
+const sliderElement = document.querySelector('.effect-level__slider');//слайдер
+const containerSlider = document.querySelector('.img-upload__effect-level');//контейнер слайдера
 
-//по умолчанию 100% не сделано
+containerSlider.classList.add('hidden');
 
 const scaleImge = (value)=>{
   scaleValue.value = `${value}%`;
@@ -34,85 +71,75 @@ const onClickButtonScaleMax = ()=>{
 };
 buttonScaleMax.addEventListener('click',onClickButtonScaleMax);
 
+const createEffect = (effect) => {
+  noUiSlider.create(sliderElement, {
+    step:effect.step,
+    start:effect.max,
+    connect:'lower',
+    range: {
+      'min':effect.min,
+      'max':effect.max,
+    }
+  });
+  sliderElement.noUiSlider.on('update', (evt)=> {
+    imgPreview.style.filter = `${effect.filter}(${evt[0]}${effect.ed})`;
+  });
+};
 
-export {scaleImge,START_SCALE};/////не работает
-
-
-/////////////////////////////////////размышления///////////////////////////////
 
 const originalButton = document.querySelector('.effects__preview--none');
 originalButton.addEventListener('click',()=>{
-  //const originalFiltr = { //оригинал
-  //   filter: 0,
-  //   min:0,
-  //   max:0,
-  //   step:0
-  // };
-  // console.log(originalFiltr);
+  containerSlider.classList.add('hidden');//контейнер скрывается
+  imgPreview.style.filter = null;
 });
 
 const grayscaleButton = document.querySelector('.effects__preview--chrome');
-grayscaleButton.addEventListener('click',()=>{//хром
-  imgPreview.style.filter = 'grayscale';
 
-  noUiSlider.create(sliderElement, {
-    range: {
-      min: 0,
-      max: 1,
-      step:0.1
-    },
-  });
-  // console.log(grayscaleFiltr);
+
+grayscaleButton.addEventListener('click',()=>{//хром
+  containerSlider.classList.remove('hidden');//контейнер возвращается
+  if(sliderElement.noUiSlider){
+    sliderElement.noUiSlider.destroy();
+  }
+  createEffect(EFFECTGRAYSCALE);
 });
 
+
 const sepiaButton = document.querySelector('.effects__preview--sepia');
-sepiaButton.addEventListener('click',()=>{
-  // const sepiaFiltr = { //сепия
-  //   filter: 'sepia',
-  //   min:0,
-  //   max:1,
-  //   step:0.1
-  // };
-  // console.log(sepiaFiltr);
+sepiaButton.addEventListener('click',()=>{//сепия
+  containerSlider.classList.remove('hidden');//контейнер возвращается
+  if(sliderElement.noUiSlider){
+    sliderElement.noUiSlider.destroy();
+  }
+  createEffect(EFFECTSEPIA);
 });
 
 const invertButton = document.querySelector('.effects__preview--marvin');
-invertButton.addEventListener('click',()=>{
-  // const invertFiltr = { //марвин//%
-  //   filter: 'invert',
-  //   min:0,
-  //   max:100,
-  //   step:1
-  // };
-  // console.log(invertFiltr);
+invertButton.addEventListener('click',()=>{//марвин
+  containerSlider.classList.remove('hidden');//контейнер возвращается
+  if(sliderElement.noUiSlider){
+    sliderElement.noUiSlider.destroy();
+  }
+  createEffect(EFFECTINVERT);
 });
 
 const blurButton = document.querySelector('.effects__preview--phobos');
-blurButton.addEventListener('click',()=>{
-  // const blurFiltr = { //фобос//px
-  //   filter: 'blur',
-  //   min:0,
-  //   max:3,
-  //   step:0.1
-  // };
-  // console.log(blurFiltr);
+blurButton.addEventListener('click',()=>{ //фобос//px
+  containerSlider.classList.remove('hidden');//контейнер возвращается
+  if(sliderElement.noUiSlider){
+    sliderElement.noUiSlider.destroy();
+  }
+  createEffect(EFFECTBLUR);
 });
+
 
 const brightnessButton = document.querySelector('.effects__preview--heat');
-brightnessButton.addEventListener('click',()=>{
-  // const brightnessFiltr = { //зной
-  //   filter: 'brightness',
-  //   min:1,
-  //   max:3,
-  //   step:0.1
-  // };
-  // console.log(brightnessFiltr);
+brightnessButton.addEventListener('click',()=>{//зной
+  containerSlider.classList.remove('hidden');//контейнер возвращается
+  if(sliderElement.noUiSlider){
+    sliderElement.noUiSlider.destroy();
+  }
+  createEffect(EFFECTBRIGHTNESS);
 });
 
 
-//по умолчанию эффект оригинал
-//только один эффек
-//при выборе оригинал контейнер с эффектами скрываются
-//при переключении уровни сбрасываются до начатьного 100%
-// const effectLevelValue = document.querySelector('.effect-level__value'); //уровень применения эффекта
-// const containerImgEffect = document.querySelector('.img-upload__effect-level'); //контейнер с эффектами
