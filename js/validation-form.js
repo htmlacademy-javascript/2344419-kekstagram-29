@@ -1,4 +1,7 @@
+import {openModal, openModalError} from './message.js';
+import { sentData } from './api.js';
 import './scrol-filter-img.js';
+import './message.js';
 
 const MAX_COUNT_HASHTAGE = 5;
 const HASHTEG_REG = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -16,13 +19,32 @@ const pristine = new Pristine(imgForm,{
   errorTextParent:'img-upload__field-wrapper'
 });
 
-imgForm.addEventListener('submit',(evt)=>{
+const onEventForm = () =>{//функция закрытия формы
+  buttonCancel.classList.add('hidden');//скрываем кнопку Х
+  document.querySelector('body').classList.remove('.modal-open');//возвращаем скрол
+  containerEditingForm.classList.add('hidden');//скрывает контейнер редактирования
+  imgPreview.style.transform = `scale(${1})`;
+  imgPreview.style.filter = null;
+  containerSlider.classList.add('hidden');
+  pristine.reset();
+  imgForm.reset();
+};
+
+imgForm.addEventListener('submit',(evt)=>{// отправка данных из формы
   evt.preventDefault();
+  try{
+    sentData(imgForm);
+    onEventForm();//закрытие модалки
+    openModal();//окно удачной зарузки
+  }catch(err){
+    openModalError();//окно ошибки загрузки
+  }
 });
 
 inputTextHashtags.addEventListener('input',(evt)=>{
   evt.preventDefault();
   const textHashtage = inputTextHashtags.value;
+
   const hashteges = textHashtage.trim().split(' ').filter((elem) => Boolean(elem.length));//убираем пробелы по бокам, делим по пробелам, фильтруем елем-если пустые(false)-убираем
   const uniqueHashteges = Array.from(new Set(hashteges.map((e) => e.toLowerCase())));//массив уникальных значений без повторений
 
@@ -54,18 +76,6 @@ inputTextHashtags.addEventListener('input',(evt)=>{
   }
 });
 
-
-const onEventForm = () =>{//функция закрытия формы
-  buttonCancel.classList.add('hidden');//скрываем кнопку Х
-  document.querySelector('body').classList.remove('.modal-open');//возвращаем скрол
-  containerEditingForm.classList.add('hidden');//скрывает контейнер редактирования
-  imgPreview.style.transform = `scale(${1})`;
-  imgPreview.style.filter = null;
-  containerSlider.classList.add('hidden');
-  pristine.reset();
-  imgForm.reset();
-};
-
 const keyDown = (evt) => {
   if(evt.key === 'Escape'){
     onEventForm(evt);
@@ -94,4 +104,4 @@ inputTextHashtags.addEventListener('blur',returnKeydown);//возврат
 inputTextComments.addEventListener('focus',removalKeydown);//запрет на кнопку ескейпт в фокусе
 inputTextComments.addEventListener('blur',returnKeydown);//возврат
 
-
+export {onEventForm};
