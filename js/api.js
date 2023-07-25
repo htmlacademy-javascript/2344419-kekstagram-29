@@ -1,5 +1,3 @@
-//import {onEventForm} from './validation-form.js';
-
 const baseUrl = {
   GET_DATA:'https://29.javascript.pages.academy/kekstagram/data',
   SENT_DATA:'https://29.javascript.pages.academy/kekstagram/',
@@ -22,20 +20,18 @@ const getData = () =>//получаем данные
       throw new Error(ErrorText.GET_DATA_ERROR);
     });
 
-const sentData = (imgForm) =>{//отправляем форму
+const sentData = async(imgForm) =>{//отправляем форму
   const formData = new FormData(imgForm);
 
-  fetch(baseUrl.SENT_DATA,{
+  await fetch(baseUrl.SENT_DATA,{
     method:'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    },
     body: formData
   })
     .then((response) =>{
       if(!response.ok){
         throw new Error(ErrorText.POST_DATA_ERROR);
       }
+
       return response.json();
     })
     .catch(() => {
@@ -62,5 +58,6 @@ const showAlert = (message) =>{
   },5000);
 };
 
-export {getData, sentData, showAlert};
+
+export {getData, sentData, showAlert,ErrorText };
 
