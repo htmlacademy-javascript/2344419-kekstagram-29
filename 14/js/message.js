@@ -6,11 +6,12 @@ const buttonClickError = errorMessage.querySelector('.error__button');
 
 const removalModal = () =>{
   const successElemtnt = document.querySelector('.success');
-  successElemtnt.remove();
+  successElemtnt.remove();//удалить модуль
 };
 const removalModalEroor = () =>{
-  const successElemtnt = document.querySelector('.error');
-  successElemtnt.remove();
+  const successElementError = document.querySelector('.error');
+  successElementError.remove();//удалить модуль
+
 };
 
 const keydownRemoval = (evt) =>{
@@ -24,16 +25,31 @@ const keydownRemovalError = (evt) =>{
   }
 };
 
+
 const openModal = () =>{
-  body.append(successMessage);
+  body.append(successMessage);//открыть модуль правильной загрузки
   buttonClick.addEventListener('click',removalModal);//по клику
   document.addEventListener('keydown',keydownRemoval);//по клавише
-// по клику вне окна???
+  const elem = document.querySelector('.success');
+  elem.addEventListener('click',(evt)=>{
+    const targetClick = evt.target;
+    if(targetClick === elem){
+      removalModal();
+    }
+  });
 };
 
 const openModalError = () =>{
-  body.append(errorMessage);
+  body.append(errorMessage);//открыть модуль ошибки загрузки
   buttonClickError.addEventListener('click',removalModalEroor);//по клику
   document.addEventListener('keydown',keydownRemovalError);//по клавише
+  const elem = document.querySelector('.error');
+  elem.addEventListener('click',(evt)=>{
+    const targetClick = evt.target;
+    if(targetClick === elem){
+      removalModalEroor();
+    }
+  });
 };
+
 export{openModal,openModalError};
