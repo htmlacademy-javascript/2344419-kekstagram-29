@@ -1,10 +1,11 @@
 
 import {openModal,openModalError } from './message.js';
 import { sentData} from './api.js';
-import './scrol-filter-img.js';
+import {brightnessButton, blurButton, invertButton, sepiaButton, grayscaleButton, originalButton} from './scrol-filter-img.js';
 import './message.js';
 
 const MAX_COUNT_HASHTAGE = 5;
+const FILE_TYPES = ['jpg','jpeg','png'];
 const HASHTEG_REG = /^#[a-zа-яё0-9]{1,19}$/i;
 const imgForm = document.querySelector('.img-upload__form');//форма загрузки и редактирования изображения
 const inputTextHashtags = imgForm.querySelector('.text__hashtags');//поле ввода хештега
@@ -16,6 +17,22 @@ const containerEditingForm = imgForm.querySelector('.img-upload__overlay');//к�
 const containerSlider = document.querySelector('.img-upload__effect-level');//контейнер слайдера
 const buttonSubmit = document.querySelector('#upload-submit');
 
+const isValidType = (file)=>{
+  const fileName = file.name.toLowerCase();
+  return FILE_TYPES.some((it) =>fileName.endsWith(it));
+};
+imgUploadInput.addEventListener('change',()=>{//прием изображения
+  const file = imgUploadInput.files[0];
+  if(file && isValidType(file)){
+    imgPreview.src = URL.createObjectURL(file);
+    brightnessButton.style.backgroundImage = `url('${imgPreview.src}')`;
+    blurButton.style.backgroundImage = `url('${imgPreview.src}')`;
+    invertButton.style.backgroundImage = `url('${imgPreview.src}')`;
+    sepiaButton.style.backgroundImage = `url('${imgPreview.src}')`;
+    grayscaleButton.style.backgroundImage = `url('${imgPreview.src}')`;
+    originalButton.style.backgroundImage = `url('${imgPreview.src}')`;
+  }
+});
 
 const pristine = new Pristine(imgForm,{
   classTo:'img-upload__field-wrapper',
@@ -81,9 +98,6 @@ const returnButton = ()=>{//возврат кнопки
 imgForm.addEventListener('submit', async (evt)=>{// отправка данных из формы
   evt.preventDefault();
 
-  //const inValid = pristine.validate();
-
-  // if(inValid){
   blockButton();//залипает кнопка
   let result;
   try{
@@ -93,7 +107,6 @@ imgForm.addEventListener('submit', async (evt)=>{// отправка данны�
   }
 
   if(!result){
-    // await sentData(evt.target);
     onEventForm();//закрытие модалки
     openModal();//окно удачной зарузки
     returnButton();
@@ -102,10 +115,6 @@ imgForm.addEventListener('submit', async (evt)=>{// отправка данны�
     openModalError();//окно с ошибкой
     returnButton();//возвращается кнопка
   }
-  // } else {
-  //   openModalError();
-  //   returnButton();
-  // }
 });
 
 
