@@ -16,4 +16,13 @@ const createRandomIdFromRangeGenerator = (min, max) => {
   };
 };
 
-export { createRandomIdFromRangeGenerator, getRandom };
+const debounce = (callback, timeoutDelay)=> {//функция для устранения дребезга
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest)
+      , timeoutDelay);
+  };
+};
+
+export { createRandomIdFromRangeGenerator, getRandom, debounce};

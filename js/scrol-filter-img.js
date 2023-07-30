@@ -142,4 +142,4 @@ brightnessButton.addEventListener('click',()=>{//зной
   createEffect(EFFECTBRIGHTNESS);
 });
 
-
+export {brightnessButton, blurButton, invertButton, sepiaButton, grayscaleButton, originalButton};

@@ -1,11 +1,23 @@
 
 import {openModal,openModalError } from './message.js';
 import { sentData} from './api.js';
-import './scrol-filter-img.js';
+import {brightnessButton, blurButton, invertButton, sepiaButton, grayscaleButton, originalButton} from './scrol-filter-img.js';
 import './message.js';
 
-const MAX_COUNT_HASHTAGE = 5;
-const HASHTEG_REG = /^#[a-zа-яё0-9]{1,19}$/i;
+const HASHTAGS_LIMIT = 5;
+const HASHTAG_REGEXP = /^#[a-zа-яё0-9]{1,19}$/i;
+const HashtagMessage = {
+  LIMIT: `Максимум ${HASHTAGS_LIMIT} хэштегов`,
+  WRONG: 'Введен невалидный хэштег',
+  REPEAT: 'Хэштеги не должны повторяться',
+};
+const form = document.querySelector('#upload-select-image');
+const pristine = new Pristine(form, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextClass: 'img-upload__error-message'
+});
+const FILE_TYPES = ['jpg','jpeg','png'];
 const imgForm = document.querySelector('.img-upload__form');//форма загрузки и редактирования изображения
 const inputTextHashtags = imgForm.querySelector('.text__hashtags');//поле ввода хештега
 const inputTextComments = imgForm.querySelector('.text__description');//поле ввода коментария
@@ -16,10 +28,21 @@ const containerEditingForm = imgForm.querySelector('.img-upload__overlay');//к�
 const containerSlider = document.querySelector('.img-upload__effect-level');//контейнер слайдера
 const buttonSubmit = document.querySelector('#upload-submit');
 
-
-const pristine = new Pristine(imgForm,{
-  classTo:'img-upload__field-wrapper',
-  errorTextParent:'img-upload__field-wrapper'
+const isValidType = (file)=>{
+  const fileName = file.name.toLowerCase();
+  return FILE_TYPES.some((it) =>fileName.endsWith(it));
+};
+imgUploadInput.addEventListener('change',()=>{//прием изображения
+  const file = imgUploadInput.files[0];
+  if(file && isValidType(file)){
+    imgPreview.src = URL.createObjectURL(file);
+    brightnessButton.style.backgroundImage = `url('${imgPreview.src}')`;
+    blurButton.style.backgroundImage = `url('${imgPreview.src}')`;
+    invertButton.style.backgroundImage = `url('${imgPreview.src}')`;
+    sepiaButton.style.backgroundImage = `url('${imgPreview.src}')`;
+    grayscaleButton.style.backgroundImage = `url('${imgPreview.src}')`;
+    originalButton.style.backgroundImage = `url('${imgPreview.src}')`;
+  }
 });
 
 const onEventForm = () =>{//функция закрытия формы
@@ -33,41 +56,28 @@ const onEventForm = () =>{//функция закрытия формы
   imgForm.reset();
 };
 
-const validatePristine = ()=>{
-  const textHashtage = inputTextHashtags.value;
+const isValidHashtagsCount = (value) => value.trim().split(' ').length <= HASHTAGS_LIMIT;
+const isValidHashtags = (value) => value === '' || value.trim().split(' ').every((hashtag) => (HASHTAG_REGEXP.test(hashtag)));
+const isHashtagsDontRepeat = (value) => {
+  const hashtagsArray = value.toLowerCase().trim().split(' ');
+  return new Set(hashtagsArray).size === hashtagsArray.length;
+};
 
-  const hashteges = textHashtage.trim().split(' ').filter((elem) => Boolean(elem.length));//убираем пробелы по бокам, делим по пробелам, фильтруем елем-если пустые(false)-убираем
-  const uniqueHashteges = Array.from(new Set(hashteges.map((e) => e.toLowerCase())));//массив уникальных значений без повторений
+pristine.addValidator(form.hashtags, isValidHashtagsCount, HashtagMessage.LIMIT);
+pristine.addValidator(form.hashtags, isValidHashtags, HashtagMessage.WRONG);
+pristine.addValidator(form.hashtags, isHashtagsDontRepeat, HashtagMessage.REPEAT);
 
-  pristine.addValidator(
-    inputTextHashtags,//поле ввода
-    ()=> hashteges.every((elem)=> HASHTEG_REG.test(elem)),//функция проверки патерна
-    'Неправильный хэштег',//сообщение ошибки
-    1,//очередность
-    true
-  );
-  pristine.addValidator(
-    inputTextHashtags,//поле ввода
-    ()=> hashteges.length <= 5,//функция проверки на кол-во хэштегов
-    `Максимум ${MAX_COUNT_HASHTAGE} хэштегов`,//сообщение ошибки
-    3,//очередность
-    true
-  );
-  pristine.addValidator(
-    inputTextHashtags,//поле ввода
-    ()=> hashteges.length === uniqueHashteges.length,//функция проверки на никальность хэштегов
-    'Хэштеги должны быть уникальными',//сообщение ошибки
-    2,//очередность
-    true
-  );
-  if(hashteges.length <= 5 && hashteges.length === uniqueHashteges.length && hashteges.every((elem)=> HASHTEG_REG.test(elem))){
-    pristine.reset();
-  } else {
-    pristine.validate();
+const trimTwoSpaces = (evt) => {
+  const str = evt.target.value;
+  if (str[str.length - 1] + str[str.length - 2] === '  ') {
+    evt.target.value = `${str.trim()} `;
   }
 };
 
-inputTextHashtags.addEventListener('input',validatePristine);
+inputTextHashtags.addEventListener('chenge',(evt) => {
+  trimTwoSpaces(evt);
+  buttonSubmit.disabled = !pristine.validate();
+});
 
 const blockButton = () =>{//блокировка кнопки
   buttonSubmit.disabled = true;
@@ -81,9 +91,6 @@ const returnButton = ()=>{//возврат кнопки
 imgForm.addEventListener('submit', async (evt)=>{// отправка данных из формы
   evt.preventDefault();
 
-  //const inValid = pristine.validate();
-
-  // if(inValid){
   blockButton();//залипает кнопка
   let result;
   try{
@@ -93,7 +100,6 @@ imgForm.addEventListener('submit', async (evt)=>{// отправка данны�
   }
 
   if(!result){
-    // await sentData(evt.target);
     onEventForm();//закрытие модалки
     openModal();//окно удачной зарузки
     returnButton();
@@ -102,10 +108,6 @@ imgForm.addEventListener('submit', async (evt)=>{// отправка данны�
     openModalError();//окно с ошибкой
     returnButton();//возвращается кнопка
   }
-  // } else {
-  //   openModalError();
-  //   returnButton();
-  // }
 });
 
 
