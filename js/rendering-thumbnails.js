@@ -41,15 +41,13 @@ body.classList.remove('modal-open');
 blockFilter.classList.remove('img-filters--inactive');
 
 
-const newFuncDelays = (images) => {
-  debounce(()=> {
-    for (let i = pictures.children.length;i > 2;i--){//очистить предыдущий фильтр
-      pictures.removeChild(pictures.children[i - 1]);//удаляй с конца относительно своей длинны, но оставь 2 стандартных
-    }
-    createThumbnails(images);
-  }, RERENDER_DELAY)();
+const newFuncDelays = debounce((images) => {
+  for (let i = pictures.children.length;i > 2;i--){//очистить предыдущий фильтр
+    pictures.removeChild(pictures.children[i - 1]);//удаляй с конца относительно своей длинны, но оставь 2 стандартных
+  }
+  createThumbnails(images);
+}, RERENDER_DELAY);
 
-};
 
 buttonDefault.addEventListener('click',() => {
   newFuncDelays(matchedPhotos);
