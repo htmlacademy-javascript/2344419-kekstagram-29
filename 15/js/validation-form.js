@@ -4,9 +4,20 @@ import { sentData} from './api.js';
 import {brightnessButton, blurButton, invertButton, sepiaButton, grayscaleButton, originalButton} from './scrol-filter-img.js';
 import './message.js';
 
-const MAX_COUNT_HASHTAGE = 5;
+const HASHTAGS_LIMIT = 5;
+const HASHTAG_REGEXP = /^#[a-zа-яё0-9]{1,19}$/i;
+const HashtagMessage = {
+  LIMIT: `Максимум ${HASHTAGS_LIMIT} хэштегов`,
+  WRONG: 'Введен невалидный хэштег',
+  REPEAT: 'Хэштеги не должны повторяться',
+};
+const form = document.querySelector('#upload-select-image');
+const pristine = new Pristine(form, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextClass: 'img-upload__error-message'
+});
 const FILE_TYPES = ['jpg','jpeg','png'];
-const HASHTEG_REG = /^#[a-zа-яё0-9]{1,19}$/i;
 const imgForm = document.querySelector('.img-upload__form');//форма загрузки и редактирования изображения
 const inputTextHashtags = imgForm.querySelector('.text__hashtags');//поле ввода хештега
 const inputTextComments = imgForm.querySelector('.text__description');//поле ввода коментария
@@ -34,11 +45,6 @@ imgUploadInput.addEventListener('change',()=>{//прием изображени�
   }
 });
 
-const pristine = new Pristine(imgForm,{
-  classTo:'img-upload__field-wrapper',
-  errorTextParent:'img-upload__field-wrapper'
-});
-
 const onEventForm = () =>{//функция закрытия формы
   buttonCancel.classList.add('hidden');//скрываем кнопку Х
   document.querySelector('body').classList.remove('.modal-open');//возвращаем скрол
@@ -50,41 +56,28 @@ const onEventForm = () =>{//функция закрытия формы
   imgForm.reset();
 };
 
-const validatePristine = ()=>{
-  const textHashtage = inputTextHashtags.value;
+const isValidHashtagsCount = (value) => value.trim().split(' ').length <= HASHTAGS_LIMIT;
+const isValidHashtags = (value) => value === '' || value.trim().split(' ').every((hashtag) => (HASHTAG_REGEXP.test(hashtag)));
+const isHashtagsDontRepeat = (value) => {
+  const hashtagsArray = value.toLowerCase().trim().split(' ');
+  return new Set(hashtagsArray).size === hashtagsArray.length;
+};
 
-  const hashteges = textHashtage.trim().split(' ').filter((elem) => Boolean(elem.length));//убираем пробелы по бокам, делим по пробелам, фильтруем елем-если пустые(false)-убираем
-  const uniqueHashteges = Array.from(new Set(hashteges.map((e) => e.toLowerCase())));//массив уникальных значений без повторений
+pristine.addValidator(form.hashtags, isValidHashtagsCount, HashtagMessage.LIMIT);
+pristine.addValidator(form.hashtags, isValidHashtags, HashtagMessage.WRONG);
+pristine.addValidator(form.hashtags, isHashtagsDontRepeat, HashtagMessage.REPEAT);
 
-  pristine.addValidator(
-    inputTextHashtags,//поле ввода
-    ()=> hashteges.every((elem)=> HASHTEG_REG.test(elem)),//функция проверки патерна
-    'Неправильный хэштег',//сообщение ошибки
-    1,//очередность
-    true
-  );
-  pristine.addValidator(
-    inputTextHashtags,//поле ввода
-    ()=> hashteges.length <= 5,//функция проверки на кол-во хэштегов
-    `Максимум ${MAX_COUNT_HASHTAGE} хэштегов`,//сообщение ошибки
-    3,//очередность
-    true
-  );
-  pristine.addValidator(
-    inputTextHashtags,//поле ввода
-    ()=> hashteges.length === uniqueHashteges.length,//функция проверки на никальность хэштегов
-    'Хэштеги должны быть уникальными',//сообщение ошибки
-    2,//очередность
-    true
-  );
-  if(hashteges.length <= 5 && hashteges.length === uniqueHashteges.length && hashteges.every((elem)=> HASHTEG_REG.test(elem))){
-    pristine.reset();
-  } else {
-    pristine.validate();
+const trimTwoSpaces = (evt) => {
+  const str = evt.target.value;
+  if (str[str.length - 1] + str[str.length - 2] === '  ') {
+    evt.target.value = `${str.trim()} `;
   }
 };
 
-inputTextHashtags.addEventListener('input',validatePristine);
+inputTextHashtags.addEventListener('chenge',(evt) => {
+  trimTwoSpaces(evt);
+  buttonSubmit.disabled = !pristine.validate();
+});
 
 const blockButton = () =>{//блокировка кнопки
   buttonSubmit.disabled = true;
