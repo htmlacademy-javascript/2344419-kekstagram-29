@@ -24,7 +24,7 @@ const inputTextComments = imgForm.querySelector('.text__description');//поле
 const imgUploadInput = imgForm.querySelector('.img-upload__input');//поле выбора файла
 const imgPreview = document.querySelector('.img-upload__preview img');//изображение в форме для редактирования
 const buttonCancel = imgForm.querySelector('.img-upload__cancel');//кнопка Х
-const containerEditingForm = imgForm.querySelector('.img-upload__overlay');//контейнер редактирования фотографии
+const containerEditingForm = imgForm.querySelector('.img-upload__overlay');//контейнер редактирования
 const containerSlider = document.querySelector('.img-upload__effect-level');//контейнер слайдера
 const buttonSubmit = document.querySelector('#upload-submit');
 
