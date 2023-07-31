@@ -1,4 +1,5 @@
-let counter = 0;//создаем счетчик
+let COUNTER = 0;//создаем счетчик
+const FIVE_COMMENTS = 5;
 const pictureBig = document.querySelector('.big-picture');//большая картинка
 const body = document.querySelector('body');//боди
 // const containerPfoto = document.querySelector('.pictures.container');//контейнер миниатюр
@@ -46,19 +47,19 @@ const renderingImg = (matchedPhoto, templateClone)=>{//функция отрис
 
     containerComments2.innerHTML = '';//очищаем контейнер комментариев от шаблонных
     loadingComment.classList.remove('hidden');//кнопка нов ком показывается
-    createComments(0,Math.min(comments.length,5),comments,containerComments2);//создаем первые 5 или меньше комментариев
+    createComments(0,Math.min(comments.length,FIVE_COMMENTS),comments,containerComments2);//создаем первые 5 или меньше комментариев
     counterComment.innerHTML = `5 из ${comments.length} комментариев`;//меняем текст в блоке новых комментариев
-    if(comments.length < 5){
+    if(comments.length < FIVE_COMMENTS){
       loadingComment.classList.add('hidden');//кнопка нов ком скрывается
       counterComment.innerHTML = `${comments.length} из ${comments.length} комментариев`;//меняем текст
     }
 
-    counter = 5;
+    COUNTER = 5;
     const onClickComments = ()=>{//слушатель для создания 5 или меньше комментариев
-      createComments(counter,Math.min(comments.length,counter + 5),comments,containerComments2);
-      counter += 5;
-      counterComment.innerHTML = `${counter} из ${comments.length} комментариев`;
-      if(counter >= comments.length){
+      createComments(COUNTER,Math.min(comments.length,COUNTER + FIVE_COMMENTS),comments,containerComments2);
+      COUNTER += FIVE_COMMENTS;
+      counterComment.innerHTML = `${COUNTER} из ${comments.length} комментариев`;
+      if(COUNTER >= comments.length){
         counterComment.innerHTML = `${comments.length} из ${comments.length} комментариев`;
         loadingComment.classList.add('hidden');//кнопка нов ком скрывается
       }

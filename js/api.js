@@ -55,7 +55,7 @@ const showAlert = (message) =>{
 
   setTimeout(()=>{//удаление ошибки через 5 сек
     alert.remove();
-  },5000);
+  },4000);
 };
 
 
