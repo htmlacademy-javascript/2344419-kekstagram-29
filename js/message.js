@@ -1,3 +1,5 @@
+import {removalKeydown} from './validation-form.js';
+
 const successMessage = document.querySelector('#success').content.querySelector('.success');
 const errorMessage = document.querySelector('#error').content.querySelector('.error');
 const body = document.querySelector('body');
@@ -42,7 +44,7 @@ const openModal = () =>{
 const openModalError = () =>{
   body.append(errorMessage);//открыть модуль ошибки загрузки
   buttonClickError.addEventListener('click',removalModalEroor);//по клику
-  document.addEventListener('keydown',keydownRemovalError);//по клавише
+  document.body.addEventListener('keydown',keydownRemovalError);//по клавише
   const elem = document.querySelector('.error');
   elem.addEventListener('click',(evt)=>{
     const targetClick = evt.target;
@@ -50,6 +52,7 @@ const openModalError = () =>{
       removalModalEroor();
     }
   });
+  removalKeydown();
 };
 
 export{openModal,openModalError};
