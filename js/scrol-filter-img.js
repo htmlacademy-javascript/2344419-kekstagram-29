@@ -44,7 +44,7 @@ const scaleValue = document.querySelector('.scale__control--value');//поле �
 const imgPreview = document.querySelector('.img-upload__preview img');//изображение в форме для редактирования
 const sliderElement = document.querySelector('.effect-level__slider');//слайдер
 const containerSlider = document.querySelector('.img-upload__effect-level');//контейнер слайдера
-
+const effectLevelElement = document.querySelector('.effect-level__value');
 containerSlider.classList.add('hidden');
 
 const scaleImge = (value)=>{
@@ -81,8 +81,10 @@ const createEffect = (effect) => {
       'max':effect.max,
     }
   });
-  sliderElement.noUiSlider.on('update', (evt)=> {
-    imgPreview.style.filter = `${effect.filter}(${evt[0]}${effect.ed})`;
+  sliderElement.noUiSlider.on('update', ()=> {
+    // const { value } = effectLevelElement;
+    effectLevelElement.value = sliderElement.noUiSlider.get();
+    imgPreview.style.filter = `${effect.filter}(${effectLevelElement.value}${effect.ed})`;
   });
 };
 
@@ -100,6 +102,7 @@ grayscaleButton.addEventListener('click',()=>{//хром
   containerSlider.classList.remove('hidden');//контейнер возвращается
   if(sliderElement.noUiSlider){
     sliderElement.noUiSlider.destroy();
+    effectLevelElement. value = EFFECTGRAYSCALE.max;
   }
   createEffect(EFFECTGRAYSCALE);
 });
@@ -110,6 +113,7 @@ sepiaButton.addEventListener('click',()=>{//сепия
   containerSlider.classList.remove('hidden');//контейнер возвращается
   if(sliderElement.noUiSlider){
     sliderElement.noUiSlider.destroy();
+    effectLevelElement. value = EFFECTSEPIA.max;
   }
   createEffect(EFFECTSEPIA);
 });
@@ -119,6 +123,7 @@ invertButton.addEventListener('click',()=>{//марвин
   containerSlider.classList.remove('hidden');//контейнер возвращается
   if(sliderElement.noUiSlider){
     sliderElement.noUiSlider.destroy();
+    effectLevelElement. value = EFFECTINVERT.max;
   }
   createEffect(EFFECTINVERT);
 });
@@ -128,6 +133,7 @@ blurButton.addEventListener('click',()=>{ //фобос//px
   containerSlider.classList.remove('hidden');//контейнер возвращается
   if(sliderElement.noUiSlider){
     sliderElement.noUiSlider.destroy();
+    effectLevelElement. value = EFFECTBLUR.max;
   }
   createEffect(EFFECTBLUR);
 });
@@ -138,6 +144,7 @@ brightnessButton.addEventListener('click',()=>{//зной
   containerSlider.classList.remove('hidden');//контейнер возвращается
   if(sliderElement.noUiSlider){
     sliderElement.noUiSlider.destroy();
+    effectLevelElement. value = EFFECTBRIGHTNESS.max;
   }
   createEffect(EFFECTBRIGHTNESS);
 });
