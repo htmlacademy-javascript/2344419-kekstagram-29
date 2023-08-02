@@ -7,7 +7,7 @@ const ErrorText = {
   POST_DATA_ERROR:'Не удалось  отправить форму. Попробуйте еще раз',
 };
 
-const getData = () =>//получаем данные
+const getData = () =>
   fetch(baseUrl.GET_DATA,{
     method:'GET'})
     .then((response) =>{
@@ -20,7 +20,7 @@ const getData = () =>//получаем данные
       throw new Error(ErrorText.GET_DATA_ERROR);
     });
 
-const sentData = async(imgForm) =>{//отправляем форму
+const sentData = async(imgForm) =>{
   const formData = new FormData(imgForm);
 
   await fetch(baseUrl.SENT_DATA,{
@@ -53,7 +53,7 @@ const showAlert = (message) =>{
   alert.textContent = message;
   document.body.append(alert);
 
-  setTimeout(()=>{//удаление ошибки через 5 сек
+  setTimeout(()=>{
     alert.remove();
   },4000);
 };
