@@ -1,16 +1,16 @@
 import { getData, showAlert } from './api.js';
-import {renderingImg} from './rendering-image.js';
-import {createRandomIdFromRangeGenerator, debounce} from './util.js';
+import {createdImg} from './rendering-image.js';
+import {createRandomIdFromRangeGenerator, calledDebounce} from './util.js';
 
 const RANDOM_IMG_FILTER = 10;
 const RERENDER_DELAY = 500;
 const pictures = document.querySelector('.pictures');
 pictures.querySelector('.pictures__title').classList.remove('visually-hidden');
 const templateElement = document.querySelector('#picture').content.querySelector('.picture');
-const blockFilter = document.querySelector('.img-filters');//блок фильтров
-const buttonDefault = document.querySelector('#filter-default');//по умолчанию
-const buttonRandom = document.querySelector('#filter-random');//случайные
-const buttonDiscussed = document.querySelector('#filter-discussed');//обсуждаемые
+const blockFilter = document.querySelector('.img-filters');
+const buttonDefault = document.querySelector('#filter-default');
+const buttonRandom = document.querySelector('#filter-random');
+const buttonDiscussed = document.querySelector('#filter-discussed');
 
 let matchedPhotos = [];
 
@@ -20,7 +20,7 @@ const createThumbnails = (arrayImg) =>{
     const {url, description, likes, comments, id} = img;
     const templateClone = templateElement.cloneNode(true);
     templateClone.id = id;
-    renderingImg(img,templateClone);
+    createdImg(img,templateClone);
     templateClone.querySelector('.picture__img').src = url;
     templateClone.querySelector('.picture__img').alt = description;
     templateClone.querySelector('.picture__likes').textContent = likes;
@@ -43,9 +43,9 @@ const body = document.querySelector('body');
 body.classList.remove('modal-open');
 
 
-const newFuncDelays = debounce((images) => {
-  for (let i = pictures.children.length;i > 2;i--){//очистить предыдущий фильтр
-    pictures.removeChild(pictures.children[i - 1]);//удаляй с конца относительно своей длинны, но оставь 2 стандартных
+const newFuncDelays = calledDebounce((images) => {
+  for (let i = pictures.children.length;i > 2;i--){
+    pictures.removeChild(pictures.children[i - 1]);
   }
   createThumbnails(images);
 }, RERENDER_DELAY);
@@ -63,7 +63,7 @@ buttonRandom.addEventListener('click',() => {
   const randomImges = [];
   const temp = createRandomIdFromRangeGenerator(0,matchedPhotos.length - 1);
   for(let i = 0; i < RANDOM_IMG_FILTER; i++){
-    randomImges.push(matchedPhotos[temp()]); //10 рандомных фоток
+    randomImges.push(matchedPhotos[temp()]);
   }
   newFuncDelays(randomImges);
   buttonRandom.classList.add('img-filters__button--active');
@@ -74,7 +74,7 @@ buttonRandom.addEventListener('click',() => {
 const sortDiscussed = (a,b) => b.comments.length - a.comments.length;
 
 buttonDiscussed.addEventListener('click',() => {
-  const discussedImg = [...matchedPhotos].sort(sortDiscussed);//фильтр по количеству комментариев по убыванию
+  const discussedImg = [...matchedPhotos].sort(sortDiscussed);
 
   newFuncDelays(discussedImg);
   buttonDiscussed.classList.add('img-filters__button--active');

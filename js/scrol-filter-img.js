@@ -38,12 +38,12 @@ const EFFECTBRIGHTNESS = {
   ed:'',
 };
 
-const buttonScaleMin = document.querySelector('.scale__control--smaller');//кнопка +
-const buttonScaleMax = document.querySelector('.scale__control--bigger');//кнопка -
-const scaleValue = document.querySelector('.scale__control--value');//поле вывода значения масшаба
-const imgPreview = document.querySelector('.img-upload__preview img');//изображение в форме для редактирования
-const sliderElement = document.querySelector('.effect-level__slider');//слайдер
-const containerSlider = document.querySelector('.img-upload__effect-level');//контейнер слайдера
+const buttonScaleMin = document.querySelector('.scale__control--smaller');
+const buttonScaleMax = document.querySelector('.scale__control--bigger');
+const scaleValue = document.querySelector('.scale__control--value');
+const imgPreview = document.querySelector('.img-upload__preview img');
+const sliderElement = document.querySelector('.effect-level__slider');
+const containerSlider = document.querySelector('.img-upload__effect-level');
 const effectLevelElement = document.querySelector('.effect-level__value');
 containerSlider.classList.add('hidden');
 
@@ -52,24 +52,24 @@ const scaleImge = (value)=>{
   imgPreview.style.transform = `scale(${value / 100})`;
 };
 
-const onClickButtonScaleMin = () =>{
+const pressedClickButtonScaleMin = () =>{
   if(parseInt(scaleValue.value,10) !== MIN_SCALE){
     scaleImge(
       Math.min(parseInt(scaleValue.value,10) - STEP_SCALE, MAX_SCALE)
     );
   }
 };
-buttonScaleMin.addEventListener('click',onClickButtonScaleMin);
+buttonScaleMin.addEventListener('click',pressedClickButtonScaleMin);
 
 
-const onClickButtonScaleMax = ()=>{
+const pressedClickButtonScaleMax = ()=>{
   if(parseInt(scaleValue.value,10) !== MAX_SCALE){
     scaleImge(
       Math.max(parseInt(scaleValue.value,10) + STEP_SCALE, MIN_SCALE)
     );
   }
 };
-buttonScaleMax.addEventListener('click',onClickButtonScaleMax);
+buttonScaleMax.addEventListener('click',pressedClickButtonScaleMax);
 
 const createEffect = (effect) => {
   noUiSlider.create(sliderElement, {
@@ -82,7 +82,6 @@ const createEffect = (effect) => {
     }
   });
   sliderElement.noUiSlider.on('update', ()=> {
-    // const { value } = effectLevelElement;
     effectLevelElement.value = sliderElement.noUiSlider.get();
     imgPreview.style.filter = `${effect.filter}(${effectLevelElement.value}${effect.ed})`;
   });
@@ -91,15 +90,15 @@ const createEffect = (effect) => {
 
 const originalButton = document.querySelector('.effects__preview--none');
 originalButton.addEventListener('click',()=>{
-  containerSlider.classList.add('hidden');//контейнер скрывается
+  containerSlider.classList.add('hidden');
   imgPreview.style.filter = null;
 });
 
 const grayscaleButton = document.querySelector('.effects__preview--chrome');
 
 
-grayscaleButton.addEventListener('click',()=>{//хром
-  containerSlider.classList.remove('hidden');//контейнер возвращается
+grayscaleButton.addEventListener('click',()=>{
+  containerSlider.classList.remove('hidden');
   if(sliderElement.noUiSlider){
     sliderElement.noUiSlider.destroy();
     effectLevelElement. value = EFFECTGRAYSCALE.max;
@@ -109,8 +108,8 @@ grayscaleButton.addEventListener('click',()=>{//хром
 
 
 const sepiaButton = document.querySelector('.effects__preview--sepia');
-sepiaButton.addEventListener('click',()=>{//сепия
-  containerSlider.classList.remove('hidden');//контейнер возвращается
+sepiaButton.addEventListener('click',()=>{
+  containerSlider.classList.remove('hidden');
   if(sliderElement.noUiSlider){
     sliderElement.noUiSlider.destroy();
     effectLevelElement. value = EFFECTSEPIA.max;
@@ -119,8 +118,8 @@ sepiaButton.addEventListener('click',()=>{//сепия
 });
 
 const invertButton = document.querySelector('.effects__preview--marvin');
-invertButton.addEventListener('click',()=>{//марвин
-  containerSlider.classList.remove('hidden');//контейнер возвращается
+invertButton.addEventListener('click',()=>{
+  containerSlider.classList.remove('hidden');
   if(sliderElement.noUiSlider){
     sliderElement.noUiSlider.destroy();
     effectLevelElement. value = EFFECTINVERT.max;
@@ -129,8 +128,8 @@ invertButton.addEventListener('click',()=>{//марвин
 });
 
 const blurButton = document.querySelector('.effects__preview--phobos');
-blurButton.addEventListener('click',()=>{ //фобос//px
-  containerSlider.classList.remove('hidden');//контейнер возвращается
+blurButton.addEventListener('click',()=>{
+  containerSlider.classList.remove('hidden');
   if(sliderElement.noUiSlider){
     sliderElement.noUiSlider.destroy();
     effectLevelElement. value = EFFECTBLUR.max;
@@ -140,8 +139,8 @@ blurButton.addEventListener('click',()=>{ //фобос//px
 
 
 const brightnessButton = document.querySelector('.effects__preview--heat');
-brightnessButton.addEventListener('click',()=>{//зной
-  containerSlider.classList.remove('hidden');//контейнер возвращается
+brightnessButton.addEventListener('click',()=>{
+  containerSlider.classList.remove('hidden');
   if(sliderElement.noUiSlider){
     sliderElement.noUiSlider.destroy();
     effectLevelElement. value = EFFECTBRIGHTNESS.max;

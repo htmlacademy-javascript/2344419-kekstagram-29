@@ -4,7 +4,7 @@ import { sentData, showAlert, ErrorText} from './api.js';
 import {brightnessButton, blurButton, invertButton, sepiaButton, grayscaleButton, originalButton} from './scrol-filter-img.js';
 import './message.js';
 
-const FILE_TYPES = ['jpg','jpeg','png'];
+const FILES_TYPES = ['jpg','jpeg','png'];
 const HASHTAGS_LIMIT = 5;
 const HASHTAG_REGEXP = /^#[a-zа-яё0-9]{1,19}$/i;
 const HashtagMessage = {
@@ -18,22 +18,22 @@ const pristine = new Pristine(form, {
   errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'img-upload__error-message'
 });
-const imgForm = document.querySelector('.img-upload__form');//форма загрузки и редактирования изображения
-const body = document.querySelector('body');//боди
-const inputTextHashtags = imgForm.querySelector('.text__hashtags');//поле ввода хештега
-const inputTextComments = imgForm.querySelector('.text__description');//поле ввода коментария
-const imgUploadInput = imgForm.querySelector('.img-upload__input');//поле выбора файла
-const imgPreview = document.querySelector('.img-upload__preview img');//изображение в форме для редактирования
-const buttonCancel = imgForm.querySelector('.img-upload__cancel');//кнопка Х
-const containerEditingForm = imgForm.querySelector('.img-upload__overlay');//контейнер редактирования
-const containerSlider = document.querySelector('.img-upload__effect-level');//контейнер слайдера
+const imgForm = document.querySelector('.img-upload__form');
+const body = document.querySelector('body');
+const inputTextHashtags = imgForm.querySelector('.text__hashtags');
+const inputTextComments = imgForm.querySelector('.text__description');
+const imgUploadInput = imgForm.querySelector('.img-upload__input');
+const imgPreview = document.querySelector('.img-upload__preview img');
+const buttonCancel = imgForm.querySelector('.img-upload__cancel');
+const containerEditingForm = imgForm.querySelector('.img-upload__overlay');
+const containerSlider = document.querySelector('.img-upload__effect-level');
 const buttonSubmit = document.querySelector('#upload-submit');
 
 const isValidType = (file)=>{
   const fileName = file.name.toLowerCase();
-  return FILE_TYPES.some((it) =>fileName.endsWith(it));
+  return FILES_TYPES.some((it) =>fileName.endsWith(it));
 };
-imgUploadInput.addEventListener('change',()=>{//прием изображения
+imgUploadInput.addEventListener('change',()=>{
   const file = imgUploadInput.files[0];
   if(file && isValidType(file)){
     imgPreview.src = URL.createObjectURL(file);
@@ -46,10 +46,10 @@ imgUploadInput.addEventListener('change',()=>{//прием изображени�
   }
 });
 
-const onEventForm = () =>{//функция закрытия формы
-  containerEditingForm.classList.add('hidden');//скрывает контейнер редактирования
-  body.classList.remove('modal-open');//возвращаем скрол
-  buttonCancel.classList.add('hidden');//скрываем кнопку Х
+const calledEventForm = () =>{
+  containerEditingForm.classList.add('hidden');
+  body.classList.remove('modal-open');
+  buttonCancel.classList.add('hidden');
   imgPreview.style.transform = `scale(${1})`;
   imgPreview.style.filter = null;
   containerSlider.classList.add('hidden');
@@ -69,11 +69,11 @@ pristine.addValidator(form.hashtags, isValidHashtags, HashtagMessage.WRONG);
 pristine.addValidator(form.hashtags, isHashtagsDontRepeat, HashtagMessage.REPEAT);
 
 
-const blockButton = () =>{//блокировка кнопки
+const blockButton = () =>{
   buttonSubmit.disabled = true;
   buttonSubmit.textContent = 'Сохраняю...';
 };
-const returnButton = ()=>{//возврат кнопки
+const returnButton = ()=>{
   buttonSubmit.disabled = false;
   buttonSubmit.textContent = 'Опубликовать';
 };
@@ -88,54 +88,54 @@ inputTextHashtags.addEventListener('change',() => {
   }
 });
 
-form.addEventListener('submit', async (evt)=>{// отправка данных из формы
+
+const calledKeyDown = (evt) => {
+  if(evt.key === 'Escape'){
+    calledEventForm(evt);
+  }
+  document.removeEventListener('keydown',calledKeyDown);
+};
+
+imgUploadInput.addEventListener('change',()=>{
+  containerEditingForm.classList.remove('hidden');
+  document.querySelector('body').classList.add('modal-open');
+  buttonCancel.classList.remove('hidden');
+  buttonCancel.addEventListener('click',calledEventForm);
+  document.addEventListener('keydown',calledKeyDown);
+});
+
+const removedKeydownForm = () => {
+  document.removeEventListener('keydown',calledKeyDown);
+};
+const returnKeydown = ()=>{
+  document.addEventListener('keydown',calledKeyDown);
+};
+
+inputTextHashtags.addEventListener('focus',removedKeydownForm);
+inputTextHashtags.addEventListener('blur',returnKeydown);
+
+inputTextComments.addEventListener('focus',removedKeydownForm);
+inputTextComments.addEventListener('blur',returnKeydown);
+
+form.addEventListener('submit', async (evt)=>{
   evt.preventDefault();
 
-  blockButton();//залипает кнопка
+  blockButton();
   let result;
   try{
-    result = await sentData(evt.target);//ожидает ответа
+    result = await sentData(evt.target);
   } catch(err) {
     result = err;
   }
 
   if(!result){
-    onEventForm();//закрытие модалки
-    openModal();//окно удачной зарузки
+    calledEventForm();
+    openModal();
     returnButton();
   } else{
-    openModalError();//окно с ошибкой
-    returnButton();//возвращается кнопка
+    openModalError();
+    returnButton();
   }
 });
 
-
-const onKeyDown = (evt) => {
-  if(evt.key === 'Escape'){
-    onEventForm(evt);
-  }
-  document.removeEventListener('keydown',onKeyDown);
-};
-
-imgUploadInput.addEventListener('change',()=>{//слушатель события открытие окна загрузки
-  containerEditingForm.classList.remove('hidden');//показать контейнер редактирования
-  document.querySelector('body').classList.add('modal-open');// чтобы не работал скрол большого окна
-  buttonCancel.classList.remove('hidden');//показываем кнопку Х
-  buttonCancel.addEventListener('click',onEventForm);//слушатель удаления по Х
-  document.addEventListener('keydown',onKeyDown);//по кнопке ESC
-});
-
-const removalKeydown = () => {
-  document.removeEventListener('keydown',onKeyDown);
-};
-const returnKeydown = ()=>{
-  document.addEventListener('keydown',onKeyDown);
-};
-
-inputTextHashtags.addEventListener('focus',removalKeydown);//запрет на кнопку ескейпт в фокусе
-inputTextHashtags.addEventListener('blur',returnKeydown);//возврат
-
-inputTextComments.addEventListener('focus',removalKeydown);//запрет на кнопку ескейпт в фокусе
-inputTextComments.addEventListener('blur',returnKeydown);//возврат
-
-export {onEventForm, removalKeydown };
+export { removedKeydownForm, returnKeydown };
