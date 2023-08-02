@@ -1,19 +1,18 @@
-let COUNTER = 0;//создаем счетчик
+let COUNTER = 0;
 const FIVE_COMMENTS = 5;
-const pictureBig = document.querySelector('.big-picture');//большая картинка
-const body = document.querySelector('body');//боди
-// const containerPfoto = document.querySelector('.pictures.container');//контейнер миниатюр
-const containerComments2 = pictureBig.querySelector('.social__comments');//контейнер комментариев
-const loadingComment = document.querySelector('.comments-loader');//кнопка загрузки новых комментариев
-const counterComment = document.querySelector('.social__comment-count');//блок с колличеством открытых комментариев
+const pictureBig = document.querySelector('.big-picture');
+const body = document.querySelector('body');
+const containerComments2 = pictureBig.querySelector('.social__comments');
+const loadingComment = document.querySelector('.comments-loader');
+const counterComment = document.querySelector('.social__comment-count');
 const buttonX = pictureBig.querySelector('#picture-cancel');
 
-const createComments = (start,end,comments,containerComments) =>{//функция создания комментариев(старт, финиш, комментарии, контейнер)
+const createComments = (start,end,comments,containerComments) =>{
   for(let i = start; i < end; i++){
 
-    const createCommentsLi = document.createElement('li');//создаем пунк списка
+    const createCommentsLi = document.createElement('li');
     createCommentsLi.classList.add('social__comment');
-    const createElementImg = document.createElement('img');//создаем файл
+    const createElementImg = document.createElement('img');
     createElementImg.classList.add('social__picture');
 
     createElementImg.src = comments[i].avatar;
@@ -21,69 +20,69 @@ const createComments = (start,end,comments,containerComments) =>{//функци�
     createElementImg.width = '35';
     createElementImg.height = '35';
 
-    createCommentsLi.appendChild(createElementImg);//кладем в список файл
-    const createElementP = document.createElement('p');//в файл кладем параграф
+    createCommentsLi.appendChild(createElementImg);
+    const createElementP = document.createElement('p');
     createElementP.classList.add('social__text');
-    createElementP.textContent = comments[i].message;//в параграф кладем текст комментария
-    createCommentsLi.appendChild(createElementP);//в список кладем параграф
-    containerComments.appendChild(createCommentsLi);// и все что создали в контейнер
+    createElementP.textContent = comments[i].message;
+    createCommentsLi.appendChild(createElementP);
+    containerComments.appendChild(createCommentsLi);
   }
 };
 
 
-const renderingImg = (matchedPhoto, templateClone)=>{//функция отрисовки большого изображения
+const createdImg = (matchedPhoto, templateClone)=>{
 
   templateClone.addEventListener('click', () =>{
 
-    body.classList.add('modal-open');//отключаем чтобы не работал скрол большого окна
+    body.classList.add('modal-open');
     const {url, description, likes, comments} = matchedPhoto;
 
-    pictureBig.classList.remove('hidden');//показываем большое изображение
+    pictureBig.classList.remove('hidden');
 
     pictureBig.querySelector('.big-picture__img').querySelector('img').src = url;
     pictureBig.querySelector('.likes-count').textContent = likes;
     pictureBig.querySelector('.social__caption').textContent = description;
 
 
-    containerComments2.innerHTML = '';//очищаем контейнер комментариев от шаблонных
-    loadingComment.classList.remove('hidden');//кнопка нов ком показывается
-    createComments(0,Math.min(comments.length,FIVE_COMMENTS),comments,containerComments2);//создаем первые 5 или меньше комментариев
-    counterComment.innerHTML = `5 из ${comments.length} комментариев`;//меняем текст в блоке новых комментариев
+    containerComments2.innerHTML = '';
+    loadingComment.classList.remove('hidden');
+    createComments(0,Math.min(comments.length,FIVE_COMMENTS),comments,containerComments2);
+    counterComment.innerHTML = `5 из ${comments.length} комментариев`;
     if(comments.length < FIVE_COMMENTS){
-      loadingComment.classList.add('hidden');//кнопка нов ком скрывается
-      counterComment.innerHTML = `${comments.length} из ${comments.length} комментариев`;//меняем текст
+      loadingComment.classList.add('hidden');
+      counterComment.innerHTML = `${comments.length} из ${comments.length} комментариев`;
     }
 
     COUNTER = 5;
-    const onClickComments = ()=>{//слушатель для создания 5 или меньше комментариев
+    const pressedClickComments = ()=>{
       createComments(COUNTER,Math.min(comments.length,COUNTER + FIVE_COMMENTS),comments,containerComments2);
       COUNTER += FIVE_COMMENTS;
       counterComment.innerHTML = `${COUNTER} из ${comments.length} комментариев`;
       if(COUNTER >= comments.length){
         counterComment.innerHTML = `${comments.length} из ${comments.length} комментариев`;
-        loadingComment.classList.add('hidden');//кнопка нов ком скрывается
+        loadingComment.classList.add('hidden');
       }
     };
-    loadingComment.addEventListener('click',onClickComments);
+    loadingComment.addEventListener('click',pressedClickComments);
 
 
-    const onCleanButton = (evt)=>{
+    const pressedCleanButton = (evt)=>{
       evt.preventDefault();
       pictureBig.classList.add('hidden');
       body.classList.remove('modal-open');
-      loadingComment.removeEventListener('click',onClickComments);
+      loadingComment.removeEventListener('click',pressedClickComments);
     };
 
     const keyDown = (evt)=>{
       if(evt.key === 'Escape'){
-        onCleanButton(evt);
+        pressedCleanButton(evt);
 
       }
     };
-    buttonX.addEventListener('click',onCleanButton);
+    buttonX.addEventListener('click',pressedCleanButton);
     document.addEventListener('keydown',keyDown);
   });
 
 };
 
-export {renderingImg};
+export {createdImg};
